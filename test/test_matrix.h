@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include <revector/matrix.h>
 
 void test_Gaussian_elimination();
 void test_Doolittle_decompose();

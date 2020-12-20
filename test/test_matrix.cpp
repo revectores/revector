@@ -1,3 +1,4 @@
+#include <cstdio>
 #include "test_matrix.h"
 
 
@@ -268,4 +269,5 @@ int main(){
     test_Jacobi_iteration();
     test_Gauss_Seidel_iteration();
     test_SOR();
+    printf("test_matrix passed.\n");
 }
