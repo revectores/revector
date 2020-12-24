@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <utility>
 #include <cassert>
 
 typedef std::vector<std::vector<long double>> matrix_t;
@@ -105,6 +106,7 @@ public:
     Matrix operator-(const Matrix& other) const;
     Matrix operator*(const Matrix& other) const;
     Matrix operator*(const long double coef) const;
+    Matrix operator/(const long double coef) const;
     friend Matrix operator*(const long double coef, const Matrix& matrix);
     Matrix get_inverse() const;
     Row operator[](int row){
@@ -144,6 +146,19 @@ public:
     std::vector<Matrix> Crout_decompose() const;
     std::vector<Matrix> Cholesky_decompose() const;
     std::vector<Matrix> refined_Cholesky_decompose() const;
+
+    std::pair<long double, Matrix> get_dominant_eigen(
+        Matrix      init_vector,
+        long double precision) const;
+
+    std::pair<long double, Matrix> get_smallest_eigen(
+        Matrix      init_vector,
+        long double precision) const;
+
+    std::pair<long double, Matrix> get_closest_eigen(
+        long double center,
+        Matrix      init_vector,
+        long double precision) const;
 
     friend std::ostream& operator<< (std::ostream& os, Matrix &m);
 };

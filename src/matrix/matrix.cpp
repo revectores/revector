@@ -76,14 +76,21 @@ Matrix Matrix::operator*(const long double coef) const {
 }
 
 
+Matrix Matrix::operator/(const long double coef) const {
+    return (*this) * (1 / coef);
+}
+
+
 Matrix operator*(const long double coef, const Matrix& matrix){
     return matrix * coef;
 }
 
 
+
+
 Matrix Matrix::get_inverse() const {
     Matrix MM = get_augment(get_identity());
-    return MM.to_upper().upper2diag().diag2identity().get_col_slice(cols, cols * 2);
+    return MM.to_upper_with_pivoting().upper2diag().diag2identity().get_col_slice(cols, cols * 2);
 }
 
 
@@ -434,6 +441,56 @@ std::vector<Matrix> Matrix::refined_Cholesky_decompose() const {
         }
     }
     return {L, D, L.get_transpose()};
+}
+
+
+std::pair<long double, Matrix> Matrix::get_dominant_eigen(Matrix init_vector, long double precision) const {
+    std::vector<Matrix> X;
+    std::vector<Matrix> Y;
+
+    if (!init_vector.is_empty()) {
+        X.push_back(init_vector);
+        Y.push_back(init_vector / init_vector.inf_norm());
+    } else {
+        X.push_back(Matrix(rows, 1, 1));
+        Y.push_back(Matrix(rows, 1, 1));
+    }
+
+    while (true) {
+        Matrix X_next = (*this) * Y.rbegin()[0];
+        Matrix Y_next = X_next / X_next.inf_norm();
+
+        Matrix X_cur = X.rbegin()[0];
+        Matrix Y_cur = Y.rbegin()[0];
+        X.push_back(X_next);
+        Y.push_back(Y_next);
+
+        if ((X_next - X_cur).inf_norm() < precision){
+            return {abs(X_next.inf_norm()), Y_next};
+        }
+
+        if ((X_next + X_cur).inf_norm() < precision){
+            return {-abs(X_next.inf_norm()), Y_next};
+        }
+    }
+}
+
+std::pair<long double, Matrix> Matrix::get_smallest_eigen(Matrix init_vector, long double precision) const {
+    std::pair<long double, Matrix> eigen_pair = get_inverse().get_dominant_eigen(init_vector, precision);
+
+    long double eigenvalue = eigen_pair.first;
+    Matrix eigenvector = eigen_pair.second;
+
+    return {1 / eigenvalue, eigenvector};
+}
+
+std::pair<long double, Matrix> Matrix::get_closest_eigen(long double center, Matrix init_vector, long double precision) const {
+    Matrix offset_matrix = (*this) - center * get_identity();
+    std::pair<long double, Matrix> eigen_pair = offset_matrix.get_smallest_eigen(init_vector, precision);
+    long double eigenvalue = eigen_pair.first;
+    Matrix eigenvector = eigen_pair.second;
+
+    return {eigenvalue + center, eigenvector};
 }
 
 
