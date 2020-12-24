@@ -84,8 +84,7 @@ void test_get_dominant_eigen(){
         assert((A_list[i] * eigenvector - eigenvalue * eigenvector).inf_norm() < epsilons[i]);
         assert(eigenvalue - lambdas[i] < 1e-2);
         assert((eigenvector - x_list[i]).inf_norm() < 1e-2 ||
-               (eigenvector + x_list[i]).inf_norm() < 1e-2
-              );
+               (eigenvector + x_list[i]).inf_norm() < 1e-2);
     }
 }
 
@@ -98,8 +97,8 @@ void test_get_smallest_eigen(){
         long double eigenvalue = eigen_pair.first;
         Matrix eigenvector = eigen_pair.second;
 
-        std::cout << eigenvalue << std::endl;
-        std::cout << eigenvector << std::endl;
+        // std::cout << eigenvalue << std::endl;
+        // std::cout << eigenvector << std::endl;
     }
 }
 
@@ -110,10 +109,10 @@ void test_get_closest_eigen(){
     long double eigenvalue = eigen_pair.first;
     Matrix eigenvector = eigen_pair.second;
 
-    std::cout << eigenvalue << std::endl;
-    std::cout << eigenvector << std::endl;
+    // std::cout << eigenvalue << std::endl;
+    // std::cout << eigenvector << std::endl;
 
-    std::cout << std::endl << std::endl;
+    // std::cout << std::endl << std::endl;
 }
 
 
@@ -121,5 +120,6 @@ int main(){
     test_get_dominant_eigen();
     test_get_smallest_eigen();
     test_get_closest_eigen();
+    printf("test_eigen passed.\n");
     return 0;
 }
