@@ -1,6 +1,5 @@
 LIBRARY_NAME = revector
 MODULE_NAMES := matrix poly
-TEST_PATH = test
 SRC_PATH = src
 
 MODULE_DIRS := $(foreach name, $(MODULE_NAMES), $(SRC_PATH)/$(name))
@@ -11,13 +10,13 @@ SOURCES     := $(foreach stem, $(STEMS), $(stem).cpp)
 OBJS        := $(foreach stem, $(STEMS), $(stem).o)
 SHARED_OBJS := $(foreach name, $(MODULE_NAMES), $(SRC_PATH)/$(name)/lib$(name).so)
 
-TESTS         := $(foreach name, $(MODULE_NAMES), $(TEST_PATH)/test_$(name))
-TESTS_SOURCES := $(foreach name, $(TESTS), $(name).cpp)
+TEST_PATH = test
+TEST_DIRS := $(foreach name, $(MODULE_NAMES), $(TEST_PATH)/test_$(name))
 
 SYS_INCLUDE_PATH = /usr/local/include
 SYS_LIBRARY_PATH = /usr/local/lib
 
-.PHONY: all
+.PHONY: all .FORCE
 
 
 
@@ -51,17 +50,17 @@ uninstall:
 	rm -r $(SYS_INCLUDE_PATH)/$(LIBRARY_NAME)
 	rm -r $(SYS_LIBRARY_PATH)/$(LIBRARY_NAME)
 
-test: $(TESTS)
-	for test_name in $(TESTS); do \
-		$$test_name; \
-	done
-
-$(TESTS): $(TEST_SOURCES)
-	for name in $(MODULE_NAMES); do \
-		g++ -l$$name -o $(TEST_PATH)/test_$$name $(TEST_PATH)/test_$$name.cpp -std=c++2a; \
+test: $(TEST_MAKEFILES) .FORCE
+	for test_dir in $(TEST_DIRS); do \
+		cd $$test_dir; make test; cd -;\
 	done
 
 clean:
 	-rm $(OBJS)
-	-rm $(SHARED_OBJS)m
+	-rm $(SHARED_OBJS)
 	-rm $(TESTS)
+	for test_dir in $(TEST_DIRS); do \
+		cd $$test_dir; make clean; cd -;\
+	done
+
+.FORCE:

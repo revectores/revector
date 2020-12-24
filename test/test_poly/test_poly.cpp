@@ -1,5 +1,5 @@
 #include <cstdio>
-#include "test_poly.h"
+#include <revector/poly.h>
 
 void test_poly_mul(){
 	Polynomial factor1(std::vector<Monomial> {Monomial(1, 3), Monomial(2, 5)});

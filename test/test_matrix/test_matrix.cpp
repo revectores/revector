@@ -1,5 +1,5 @@
 #include <cstdio>
-#include "test_matrix.h"
+#include <revector/matrix.h>
 
 
 Matrix A1({
