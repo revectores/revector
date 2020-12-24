@@ -18,7 +18,7 @@ bool Matrix::operator==(const Matrix& other) const {
     }
     for (int r = 0; r < rows; r++){
         for (int c = 0; c < cols; c++){
-            if (abs(m[r][c] - other[r][c]) > 1e-10) return false;
+            if (fabs(m[r][c] - other[r][c]) > 1e-10) return false;
             // if (m[r][c] != other[r][c]) return false;
         }
     }
@@ -98,7 +98,7 @@ std::ostream& operator<< (std::ostream& os, Matrix &m){
     if (m.cols == 1) {
         printf("(");
         for (int r = 0; r < m.rows; r++){
-            if (abs(m[r][0]) < 1e-10){
+            if (fabs(m[r][0]) < 1e-10){
                 printf("           0");
             } else {
                 printf("%12.6Lf", m[r][0]);
@@ -108,7 +108,7 @@ std::ostream& operator<< (std::ostream& os, Matrix &m){
     } else {
         for (int r = 0; r < m.rows; r++){
             for (int c = 0; c < m.cols; c++){
-                if (abs(m[r][c]) < 1e-10){
+                if (fabs(m[r][c]) < 1e-10){
                     printf("           0");
                 } else {
                     printf("%12.6Lf", m[r][c]);
@@ -135,7 +135,7 @@ bool Matrix::is_symmetric() const {
 bool Matrix::is_upper() const {
     for (int r = 0; r < rows; r++) {
         for (int c = 0; c < r; c++) {
-            if (!(abs(m[r][c]) < 1e-10)) return false;
+            if (!(fabs(m[r][c]) < 1e-10)) return false;
         }
     }
     return true;
@@ -156,7 +156,7 @@ long double Matrix::inf_norm() const {
     std::vector<long double> row_sum(rows, 0);
     for (int r = 0; r < rows; r++) {
         for (int c = 0; c < cols; c++) {
-            row_sum[r] += abs(m[r][c]);
+            row_sum[r] += fabs(m[r][c]);
         }
     }
 
@@ -466,11 +466,11 @@ std::pair<long double, Matrix> Matrix::get_dominant_eigen(Matrix init_vector, lo
         Y.push_back(Y_next);
 
         if ((X_next - X_cur).inf_norm() < precision){
-            return {abs(X_next.inf_norm()), Y_next};
+            return {fabs(X_next.inf_norm()), Y_next};
         }
 
         if ((X_next + X_cur).inf_norm() < precision){
-            return {-abs(X_next.inf_norm()), Y_next};
+            return {-fabs(X_next.inf_norm()), Y_next};
         }
     }
 }
