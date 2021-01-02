@@ -21,14 +21,12 @@ public:
 	Monomial(double _coef, int _exp){coef=_coef; exp=_exp;}
 	~Monomial(){};
 
-	bool operator==(const Monomial& m);
-	bool operator!=(const Monomial& m);
-	Monomial operator+(const Monomial& m);
-	Monomial operator*(const Monomial& m);
+	bool operator==(const Monomial& m) const;
+	bool operator!=(const Monomial& m) const;
+	Monomial operator+(const Monomial& m) const;
+	Monomial operator*(const Monomial& m) const;
     friend std::ostream& operator<< (std::ostream& os, const Monomial &m);
 };
-
-bool term_cmp(Monomial term1, Monomial term2);
 
 class Polynomial {
 public:
@@ -40,17 +38,16 @@ public:
 
 	Polynomial sort();
 	Polynomial sorted() const;
-	bool operator==(const Polynomial& other);
-	Polynomial operator+(const Monomial& m);
-	Polynomial operator+(const Polynomial& p);
-	Polynomial operator*(const Monomial& m);
-	Polynomial operator*(const Polynomial& p);
-	double evaluate(double x);
-	friend std::ostream& operator<<(std::ostream& os, const Polynomial &p);
+	bool operator==(const Polynomial& other) const;
+	Polynomial operator+(const Monomial& m) const;
+	Polynomial operator+(const Polynomial& p) const;
+	Polynomial operator*(const Monomial& m) const;
+	Polynomial operator*(const Polynomial& p) const;
+	double evaluate(double x) const;
+	friend std::ostream& operator<<(std::ostream& os, const Polynomial& p);
 };
 
 
 
-Polynomial Lagrange_interp(std::vector<point> points);
-Polynomial Newton_interp(std::vector<point> points);
-
+Polynomial Lagrange_interp(const std::vector<point>& points);
+Polynomial Newton_interp(const std::vector<point>& points);

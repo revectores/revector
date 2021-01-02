@@ -2,28 +2,23 @@
 #include "cmath"
 
 
-bool term_cmp(Monomial term1, Monomial term2){
-	return (term1.exp > term2.exp);
-}
-
-
-bool Monomial::operator==(const Monomial& m){
+bool Monomial::operator==(const Monomial& m) const {
 	return (coef == m.coef) && (exp == m.exp);
 }
 
 
-bool Monomial::operator!=(const Monomial& m){
+bool Monomial::operator!=(const Monomial& m) const {
 	return !(*this == m);
 }
 
 
-Monomial Monomial::operator+(const Monomial& m){
+Monomial Monomial::operator+(const Monomial& m) const {
 	// assert(exp == m.exp);
     return Monomial(coef + m.coef, exp);
 }
 
 
-Monomial Monomial::operator*(const Monomial& m){
+Monomial Monomial::operator*(const Monomial& m) const {
     return Monomial(coef * m.coef, exp + m.exp);
 }
 
@@ -43,7 +38,7 @@ std::ostream& operator<<(std::ostream& os, const Monomial& m){
 
 
 Polynomial Polynomial::sort(){
-	std::sort(terms.begin(), terms.end(), term_cmp);
+	std::sort(terms.begin(), terms.end(), [](Monomial m1, Monomial m2) {return m1.exp > m2.exp;});
 	return *this;
 }
 
@@ -54,7 +49,7 @@ Polynomial Polynomial::sorted() const {
 }
 
 
-bool Polynomial::operator==(const Polynomial &other){
+bool Polynomial::operator==(const Polynomial& other) const {
 	Polynomial sorted_this  = this->sorted();
 	Polynomial sorted_other = other.sorted();
 
@@ -70,7 +65,7 @@ bool Polynomial::operator==(const Polynomial &other){
 }
 
 
-Polynomial Polynomial::operator+(const Monomial &m) {
+Polynomial Polynomial::operator+(const Monomial& m) const {
 	std::vector<Monomial> sum_terms = terms;
 	for (auto it = sum_terms.begin(); it != sum_terms.end(); it++){
 		if (it->exp == m.exp) {
@@ -83,7 +78,7 @@ Polynomial Polynomial::operator+(const Monomial &m) {
 }
 
 
-Polynomial Polynomial::operator+(const Polynomial &p) {
+Polynomial Polynomial::operator+(const Polynomial& p) const {
 	Polynomial sum = terms;
 	for (auto it = p.terms.begin(); it != p.terms.end(); it++){
 		sum = sum + (*it);
@@ -92,7 +87,7 @@ Polynomial Polynomial::operator+(const Polynomial &p) {
 }
 
 
-Polynomial Polynomial::operator*(const Monomial &m) {
+Polynomial Polynomial::operator*(const Monomial& m) const {
 	std::vector<Monomial> product_terms;
 	for (auto it = terms.begin(); it != terms.end(); it++){
 		product_terms.push_back((*it) * m);
@@ -101,7 +96,7 @@ Polynomial Polynomial::operator*(const Monomial &m) {
 }
 
 
-Polynomial Polynomial::operator*(const Polynomial &p) {
+Polynomial Polynomial::operator*(const Polynomial& p) const {
 	Polynomial product;
 	for (auto it = p.terms.begin(); it != p.terms.end(); it++){
 		product = product + (*this) * (*it);
@@ -110,7 +105,7 @@ Polynomial Polynomial::operator*(const Polynomial &p) {
 }
 
 
-std::ostream& operator<<(std::ostream& os, const Polynomial &p){
+std::ostream& operator<<(std::ostream& os, const Polynomial& p){
 	for (auto it = p.terms.begin(); it != p.terms.end(); it++){
 		std::cout << *it << " ";
 	}
@@ -118,7 +113,7 @@ std::ostream& operator<<(std::ostream& os, const Polynomial &p){
 }
 
 
-double Polynomial::evaluate(double x){
+double Polynomial::evaluate(double x) const {
 	double sum = 0;
 	for (auto term_it = terms.begin(); term_it != terms.end(); term_it++){
 		sum += term_it->coef * std::pow(x, term_it->exp);
@@ -127,7 +122,7 @@ double Polynomial::evaluate(double x){
 } 
 
 
-Polynomial Lagrange_interp(std::vector<point> points) {
+Polynomial Lagrange_interp(const std::vector<point>& points){
 	Polynomial Lagrange_interp_polynomial {};
 
 	int n = points.size();
@@ -150,7 +145,7 @@ Polynomial Lagrange_interp(std::vector<point> points) {
 }
 
 
-Polynomial Newton_interp(std::vector<point> points) {
+Polynomial Newton_interp(const std::vector<point>& points){
 	Polynomial Newton_interp_polynomial {};
 
 	int n = points.size();
