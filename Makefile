@@ -1,5 +1,5 @@
 LIBRARY_NAME = revector
-MODULE_NAMES := matrix poly
+MODULE_NAMES := matrix poly vector ode
 SRC_PATH = src
 
 MODULE_DIRS := $(foreach name, $(MODULE_NAMES), $(SRC_PATH)/$(name))
@@ -27,7 +27,7 @@ libmatrix.so: $(MATRIX_PATH)/matrix.o
 
 $(SHARED_OBJS): $(OBJS)
 	for name in $(MODULE_NAMES); do \
-		g++ -shared -o $(SRC_PATH)/$$name/lib$$name.so $(SRC_PATH)/$$name/$$name.o; \
+		g++ $(foreach dir, $(MODULE_DIRS), -I$(dir)) -shared -o $(SRC_PATH)/$$name/lib$$name.so $(SRC_PATH)/$$name/$$name.o; \
 	done
 
 $(OBJS): $(SOURCES)
